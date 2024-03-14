@@ -1,6 +1,7 @@
 package org.sliu.config;
 
 import lombok.Data;
+import org.sliu.serializer.SerializerKeys;
 
 /**
  * RPC 框架配置
@@ -31,5 +32,10 @@ public class RpcConfig {
      * 模拟调用
      */
     private boolean mock = false;
+
+    /**
+     * 序列化器
+     */
+    private String serializer = SerializerKeys.JDK;
 
 }

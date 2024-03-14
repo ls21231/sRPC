@@ -1,0 +1,4 @@
+hessian=org.sliu.serializer.HessianSerializer
+jdk=org.sliu.serializer.JdkSerializer
+json=org.sliu.serializer.JsonSerializer
+kryo=org.sliu.serializer.KryoSerializer
