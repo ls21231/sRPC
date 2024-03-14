@@ -1,8 +1,11 @@
 package org.sliu;
 
 import lombok.extern.slf4j.Slf4j;
+import org.sliu.config.RegistryConfig;
 import org.sliu.config.RpcConfig;
 import org.sliu.constant.RpcConstant;
+import org.sliu.registry.Registry;
+import org.sliu.registry.RegistryFactory;
 import org.sliu.utils.ConfigUtils;
 
 /**
@@ -14,15 +17,7 @@ public class RpcApplication {
 
     private static volatile RpcConfig rpcConfig;
 
-    /**
-     * 框架初始化，支持传入自定义配置
-     *
-     * @param newRpcConfig
-     */
-    public static void init(RpcConfig newRpcConfig) {
-        rpcConfig = newRpcConfig;
-        log.info("rpc init, config = {}", newRpcConfig.toString());
-    }
+
 
     /**
      * 初始化
@@ -36,6 +31,21 @@ public class RpcApplication {
             newRpcConfig = new RpcConfig();
         }
         init(newRpcConfig);
+    }
+
+    /**
+     * 框架初始化，支持传入自定义配置
+     *
+     * @param newRpcConfig
+     */
+    public static void init(RpcConfig newRpcConfig) {
+        rpcConfig = newRpcConfig;
+        log.info("rpc init, config = {}", newRpcConfig.toString());
+        // 注册中心初始化
+        RegistryConfig registryConfig = rpcConfig.getRegistryConfig();
+        Registry registry = RegistryFactory.getInstance(registryConfig.getRegistry());
+        registry.init(registryConfig);
+        log.info("registry init, config = {}", registryConfig);
     }
 
     /**

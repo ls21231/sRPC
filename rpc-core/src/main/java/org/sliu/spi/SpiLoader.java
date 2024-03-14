@@ -2,6 +2,7 @@ package org.sliu.spi;
 
 import cn.hutool.core.io.resource.ResourceUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.sliu.registry.Registry;
 import org.sliu.serializer.Serializer;
 
 import java.io.BufferedReader;
@@ -48,7 +49,7 @@ public class SpiLoader {
     /**
      * 动态加载的类列表
      */
-    private static final List<Class<?>> LOAD_CLASS_LIST = Arrays.asList(Serializer.class);
+    private static final List<Class<?>> LOAD_CLASS_LIST = Arrays.asList(Serializer.class, Registry.class);
 
     /**
      * 加载所有类型
