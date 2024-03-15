@@ -18,7 +18,6 @@ public class RpcApplication {
     private static volatile RpcConfig rpcConfig;
 
 
-
     /**
      * 初始化
      */
@@ -26,6 +25,10 @@ public class RpcApplication {
         RpcConfig newRpcConfig;
         try {
             newRpcConfig = ConfigUtils.loadConfig(RpcConfig.class, RpcConstant.DEFAULT_CONFIG_PREFIX);
+            RegistryConfig registryConfig = ConfigUtils.loadConfig(
+                                    RegistryConfig.class,
+                                    RpcConstant.DEFAULT_CONFIG_PREFIX + "." + RpcConstant.REGISTRY_CONFIG_PREFIX);
+            newRpcConfig.setRegistryConfig(registryConfig);
         } catch (Exception e) {
             // 配置加载失败，使用默认值
             newRpcConfig = new RpcConfig();
@@ -46,6 +49,8 @@ public class RpcApplication {
         Registry registry = RegistryFactory.getInstance(registryConfig.getRegistry());
         registry.init(registryConfig);
         log.info("registry init, config = {}", registryConfig);
+        // 创建并注册 Shutdown Hook，JVM 退出时执行操作
+        Runtime.getRuntime().addShutdownHook(new Thread(registry::destroy));
     }
 
     /**
