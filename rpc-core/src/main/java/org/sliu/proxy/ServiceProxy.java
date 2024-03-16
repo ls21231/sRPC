@@ -1,8 +1,12 @@
 package org.sliu.proxy;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
+import io.vertx.core.Vertx;
+import io.vertx.core.buffer.Buffer;
+import io.vertx.core.net.NetClient;
 import lombok.extern.slf4j.Slf4j;
 import org.sliu.RpcApplication;
 import org.sliu.config.RpcConfig;
@@ -12,9 +16,9 @@ import org.sliu.model.RpcResponse;
 import org.sliu.model.ServiceMetaInfo;
 import org.sliu.registry.Registry;
 import org.sliu.registry.RegistryFactory;
-import org.sliu.serializer.JdkSerializer;
 import org.sliu.serializer.Serializer;
 import org.sliu.serializer.SerializerFactory;
+import org.sliu.server.tcp.VertxTcpClient;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
@@ -62,15 +66,9 @@ public class ServiceProxy implements InvocationHandler {
             // 暂时先取第一个
             ServiceMetaInfo selectedServiceMetaInfo = serviceMetaInfoList.get(0);
 
-            // 发送请求
-            try (HttpResponse httpResponse = HttpRequest.post(selectedServiceMetaInfo.getServiceAddress())
-            .body(bodyBytes)
-            .execute()) {
-                byte[] result = httpResponse.bodyBytes();
-                // 反序列化
-                RpcResponse rpcResponse = serializer.deserialize(result, RpcResponse.class);
-                return rpcResponse.getData();
-            }
+            // 发送 TCP 请求
+            RpcResponse rpcResponse = VertxTcpClient.doRequest(rpcRequest, selectedServiceMetaInfo);
+            return rpcResponse.getData();
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -18,6 +18,7 @@ public class ConsumerExample {
         } else {
             System.out.println("user == null");
         }
+        System.out.println("调用结束为什么不关闭呢");
         // long number = userService.getNumber();
         // System.out.println(number);
     }

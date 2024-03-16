@@ -1,2 +1,2 @@
 etcd=org.sliu.registry.EtcdRegistry
-zookeeper=
+zookeeper=org.sliu.registry.ZooKeeperRegistry

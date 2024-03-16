@@ -56,7 +56,7 @@ public class EtcdRegistry implements Registry {
         Lease leaseClient = client.getLeaseClient();
 
         // 创建一个 30 秒的租约
-        long leaseId = leaseClient.grant(30).get().getID();
+        long leaseId = leaseClient.grant(30000).get().getID();
 
         // 设置要存储的键值对
         String registerKey = ETCD_ROOT_PATH + serviceMetaInfo.getServiceNodeKey();
@@ -136,6 +136,9 @@ public class EtcdRegistry implements Registry {
 
     @Override
     public void heartBeat() {
+        if(1 == 1) {
+            return;
+        }
         // 10 秒续签一次
         CronUtil.schedule("*/10 * * * * *", new Task() {
             @Override

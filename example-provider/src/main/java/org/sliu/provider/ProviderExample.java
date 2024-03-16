@@ -10,6 +10,7 @@ import org.sliu.registry.Registry;
 import org.sliu.registry.RegistryFactory;
 import org.sliu.server.HttpServer;
 import org.sliu.server.VertxHttpServer;
+import org.sliu.server.tcp.VertxTcpServer;
 
 public class ProviderExample {
 
@@ -37,7 +38,11 @@ public class ProviderExample {
         }
 
         // 启动 web 服务
-        HttpServer httpServer = new VertxHttpServer();
-        httpServer.doStart(RpcApplication.getRpcConfig().getServerPort());
+        // HttpServer httpServer = new VertxHttpServer();
+        // httpServer.doStart(RpcApplication.getRpcConfig().getServerPort());
+
+        // 启动 TCP 服务
+        VertxTcpServer vertxTcpServer = new VertxTcpServer();
+        vertxTcpServer.doStart(8088);
     }
 }
