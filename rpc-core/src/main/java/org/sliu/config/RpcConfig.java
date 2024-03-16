@@ -1,6 +1,8 @@
 package org.sliu.config;
 
 import lombok.Data;
+import org.sliu.loadblance.LoadBalancer;
+import org.sliu.loadblance.LoadBalancerKeys;
 import org.sliu.registry.Registry;
 import org.sliu.serializer.SerializerKeys;
 
@@ -43,5 +45,10 @@ public class RpcConfig {
      * 注册中心配置
      */
     private RegistryConfig registryConfig = new RegistryConfig();
+
+    /**
+     * 负载均衡器
+     */
+    private String loadBalancer = LoadBalancerKeys.CONSISTENT_HASH;
 
 }

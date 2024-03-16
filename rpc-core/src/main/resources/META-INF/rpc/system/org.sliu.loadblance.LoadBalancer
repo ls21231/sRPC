@@ -1,0 +1,3 @@
+roundRobin=org.sliu.loadblance.RoundRobinLoadBalancer
+random=org.sliu.loadblance.RandomLoadBalancer
+consistentHash=org.sliu.loadblance.ConsistentHashLoadBalancer

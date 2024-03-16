@@ -2,6 +2,7 @@ package org.sliu.spi;
 
 import cn.hutool.core.io.resource.ResourceUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.sliu.loadblance.LoadBalancer;
 import org.sliu.registry.Registry;
 import org.sliu.serializer.Serializer;
 
@@ -49,7 +50,7 @@ public class SpiLoader {
     /**
      * 动态加载的类列表
      */
-    private static final List<Class<?>> LOAD_CLASS_LIST = Arrays.asList(Serializer.class, Registry.class);
+    private static final List<Class<?>> LOAD_CLASS_LIST = Arrays.asList(Serializer.class, Registry.class, LoadBalancer.class);
 
     /**
      * 加载所有类型

@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.sliu.RpcApplication;
 import org.sliu.config.RpcConfig;
 import org.sliu.constant.RpcConstant;
+import org.sliu.loadblance.LoadBalancer;
+import org.sliu.loadblance.LoadBalancerFactory;
 import org.sliu.model.RpcRequest;
 import org.sliu.model.RpcResponse;
 import org.sliu.model.ServiceMetaInfo;
@@ -23,7 +25,9 @@ import org.sliu.server.tcp.VertxTcpClient;
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 服务代理（JDK 动态代理）
@@ -64,7 +68,12 @@ public class ServiceProxy implements InvocationHandler {
                 throw new RuntimeException("暂无服务地址");
             }
             // 暂时先取第一个
-            ServiceMetaInfo selectedServiceMetaInfo = serviceMetaInfoList.get(0);
+            // ServiceMetaInfo selectedServiceMetaInfo = serviceMetaInfoList.get(0);
+            LoadBalancer loadBalancer = LoadBalancerFactory.getInstance(rpcConfig.getLoadBalancer());
+            // 将调用方法名（请求路径）作为负载均衡参数
+            Map<String, Object> requestParams = new HashMap<>();
+            requestParams.put("methodName", rpcRequest.getMethodName());
+            ServiceMetaInfo selectedServiceMetaInfo = loadBalancer.select(requestParams, serviceMetaInfoList);
 
             // 发送 TCP 请求
             RpcResponse rpcResponse = VertxTcpClient.doRequest(rpcRequest, selectedServiceMetaInfo);
