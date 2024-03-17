@@ -11,6 +11,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.sliu.RpcApplication;
 import org.sliu.config.RpcConfig;
 import org.sliu.constant.RpcConstant;
+import org.sliu.fault.retry.RetryStrategy;
+import org.sliu.fault.retry.RetryStrategyFactory;
+import org.sliu.fault.tolerant.TolerantStrategy;
+import org.sliu.fault.tolerant.TolerantStrategyFactory;
 import org.sliu.loadblance.LoadBalancer;
 import org.sliu.loadblance.LoadBalancerFactory;
 import org.sliu.model.RpcRequest;
@@ -76,8 +80,21 @@ public class ServiceProxy implements InvocationHandler {
             ServiceMetaInfo selectedServiceMetaInfo = loadBalancer.select(requestParams, serviceMetaInfoList);
 
             // 发送 TCP 请求
-            RpcResponse rpcResponse = VertxTcpClient.doRequest(rpcRequest, selectedServiceMetaInfo);
+
+            // 使用重试机制
+            RpcResponse rpcResponse;
+            try {
+                RetryStrategy retryStrategy = RetryStrategyFactory.getInstance(rpcConfig.getRetryStrategy());
+                rpcResponse = retryStrategy.doRetry(() ->
+                VertxTcpClient.doRequest(rpcRequest, selectedServiceMetaInfo)
+                );
+            } catch (Exception e) {
+                // 容错机制
+                TolerantStrategy tolerantStrategy = TolerantStrategyFactory.getInstance(rpcConfig.getTolerantStrategy());
+                rpcResponse = tolerantStrategy.doTolerant(null, e);
+            }
             return rpcResponse.getData();
+            // RpcResponse rpcResponse = VertxTcpClient.doRequest(rpcRequest, selectedServiceMetaInfo);
         } catch (IOException e) {
             e.printStackTrace();
         }

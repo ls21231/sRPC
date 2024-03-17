@@ -1,6 +1,8 @@
 package org.sliu.config;
 
 import lombok.Data;
+import org.sliu.fault.retry.RetryStrategyKeys;
+import org.sliu.fault.tolerant.TolerantStrategyKeys;
 import org.sliu.loadblance.LoadBalancer;
 import org.sliu.loadblance.LoadBalancerKeys;
 import org.sliu.registry.Registry;
@@ -50,5 +52,15 @@ public class RpcConfig {
      * 负载均衡器
      */
     private String loadBalancer = LoadBalancerKeys.CONSISTENT_HASH;
+
+    /**
+     * 重试策略
+     */
+    private String retryStrategy = RetryStrategyKeys.NO;
+
+    /**
+     * 容错策略
+     */
+    private String tolerantStrategy = TolerantStrategyKeys.FAIL_FAST;
 
 }

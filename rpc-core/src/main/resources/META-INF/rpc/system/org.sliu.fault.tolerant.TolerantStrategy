@@ -1,0 +1,4 @@
+failBack=org.sliu.fault.tolerant.FailBackTolerantStrategy
+failFast=org.sliu.fault.tolerant.FailFastTolerantStrategy
+failOver=org.sliu.fault.tolerant.FailOverTolerantStrategy
+failSafe=org.sliu.fault.tolerant.FailSafeTolerantStrategy
