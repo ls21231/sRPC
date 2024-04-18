@@ -3,15 +3,19 @@ package org.sliu.config;
 import lombok.Data;
 import org.sliu.fault.retry.RetryStrategyKeys;
 import org.sliu.fault.tolerant.TolerantStrategyKeys;
-import org.sliu.loadblance.LoadBalancer;
 import org.sliu.loadblance.LoadBalancerKeys;
-import org.sliu.registry.Registry;
 import org.sliu.serializer.SerializerKeys;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 
 /**
  * RPC 框架配置
  */
 @Data
+@ConfigurationProperties(prefix = "rpc")
+@EnableConfigurationProperties(RpcConfig.class)
+@Configuration
 public class RpcConfig {
 
     /**

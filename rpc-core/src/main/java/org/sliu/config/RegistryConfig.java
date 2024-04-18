@@ -1,11 +1,17 @@
 package org.sliu.config;
 
 import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 
 /**
  * RPC 框架注册中心配置
  */
 @Data
+@ConfigurationProperties(prefix = "rpc.registry")
+@EnableConfigurationProperties(RegistryConfig.class)
+@Configuration
 public class RegistryConfig {
 
     /**
